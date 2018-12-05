@@ -1,0 +1,87 @@
+CREATE ROLE admin WITH CREATEDB CREATEROLE;
+
+create database
+
+create table doctorMD()
+create table patientMD()
+create table caretakerMD()
+create table itsupport()
+create table assignedTo()
+create table testRequested()
+create table Prescription()
+
+CREATE USER patientuser WITH PASSWORD 'patient444';
+CREATE USER doctoruser WITH PASSWORD 'doctor444';
+CREATE USER caretakeruser WITH PASSWORD 'ctaker444';
+
+CREATE USER itsupportuser WITH PASSWORD 'support444';
+
+GRANT ALL ON PatientMD TO patientuser ;
+GRANT ALL ON doctorMD TO doctoruser ;
+GRANT ALL ON caretakerMD TO caretakeruser ;
+GRANT ALL ON itsupport TO itsupportuser ;
+
+GRANT SELECT ON PatientMD ,doctorMD ,caretakerMD TO itsupportuser ;
+
+GRANT SELECT ON assignedTo TO patientuser ;
+GRANT SELECT,INSERT,UPDATE assignedTo TO doctoruser ;
+GRANT SELECT assignedTo TO caretakeruser ;
+
+GRANT SELECT ON testRequested TO patientuser ;
+GRANT SELECT,INSERT, DELETE,UPDATE ON testRequested TO doctoruser ;
+GRANT SELECT,UPDATE testRequested TO caretakeruser ;
+
+
+GRANT SELECT ON Prescription TO patientuser ;
+GRANT SELECT,INSERT, DELETE,UPDATE ON Prescription TO doctoruser ;
+GRANT SELECT Prescription TO caretakeruser ;
+
+
+ALTER TABLE doctorMD ENABLE ROW LEVEL SECURITY;
+ALTER TABLE patientMD ENABLE ROW LEVEL SECURITY;
+ALTER TABLE caretakerMD ENABLE ROW LEVEL SECURITY;
+ALTER TABLE testRequested ENABLE ROW LEVEL SECURITY;
+ALTER TABLE Prescription ENABLE ROW LEVEL SECURITY;
+
+
+CREATE POLICY doctorMDp_s ON doctorMD TO doctoruser 
+USING(doctoruser =current_user);
+
+CREATE POLICY patientMDp_s ON patientMD TO patientuser 
+USING(patientuser =current_user);
+
+CREATE POLICY CareTakerMDp_s ON CareTakerMD TO caretakeruser 
+USING(caretakeruser =current_user);
+
+
+CREATE POLICY assignedTop_s ON assignedTo TO doctoruser 
+USING (doc_id = (SELECT doc_id FROM assignedTo WHERE docName = current_user));
+
+
+
+CREATE POLICY testRequestedp_s ON testRequestedMD TO doctoruser 
+USING(doctoruser =current_user);
+
+CREATE POLICY Prescriptionp_s ON Prescription TO doctoruser 
+USING(doctoruser =current_user);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
